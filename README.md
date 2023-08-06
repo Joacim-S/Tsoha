@@ -9,3 +9,5 @@ Nörteille suunnattu deittisovellus, jossa painotus on tilastoitavasa datassa pr
 * Mahdollisia lisäominaisuuksiä riippuen laajuuden riittävyydestä:
   * Ryhmäkeskustelut
   * Profiilikuvat
+## Välipalautus 2 tilanne
+Ei testattavaa
