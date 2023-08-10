@@ -1,0 +1,22 @@
+<h1>NerDate</h1>
+<hr>
+{% if session.username %}
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+<a href='/logout'>Kirjaudu ulos</a>
+{% else %}
+<p>Tervetuloa!</p>
+<form action='/login' method='POST'>
+    <p>Käyttäjätunnus<br>
+    <input type='text' name='username'></p>
+    <p>salasana<br>
+    <input type='text' name='password'></p>
+    <input type='submit' value='kirjaudu'>
+    {% if no_user %}
+    <p>Tunnuksella ei löytynyt käyttäjää</p>
+    {% endif %}
+    {% if wrong_password %}
+    <p>Väärä salasana</p>
+    {% endif %}
+</form>
+<b> <a href='/register'> Luo käyttäjä </a></b>
+{% endif %}

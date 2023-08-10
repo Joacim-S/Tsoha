@@ -1,0 +1,13 @@
+<h1>NerDate</h1>
+<form action='/create' method='POST'>
+    <p>Nimi, joka näytetään muille<br>
+    <input type='text' name='displayname'></p>
+    <p>Käyttäjätunnus, jolla kirjaudut sisään<br>
+    <input type='text' name='username'></p>
+    <p>salasana<br>
+    <input type='text' name='password'></p>
+    <input type='submit' value='Luo tunnus'>
+</form>
+{% if error %}
+<p>Käyttäjätunnus on jo olemassa!</p>
+{% endif %}
