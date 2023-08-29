@@ -11,11 +11,8 @@
     <p>salasana<br>
     <input type='text' name='password'></p>
     <input type='submit' value='kirjaudu'>
-    {% if no_user %}
-    <p>Tunnuksella ei löytynyt käyttäjää</p>
-    {% endif %}
-    {% if wrong_password %}
-    <p>Väärä salasana</p>
+    {% if credential_error %}
+    <p>Väärä tunnus tai salasana</p>
     {% endif %}
 </form>
 <b> <a href='/register'> Luo käyttäjä </a></b>
