@@ -28,7 +28,26 @@ def create():
     create_result = users.create_user(username, displayname, password1, password2)
     if create_result:
         return render_template('register.html', error=create_result)
-    return render_template('/my_profile.html', first_login = True)
+    return redirect('/new_profile')
+
+@app.route('/new_profile', methods=['GET'])
+def new_profile():
+    return render_template('my_profile.html', first_login = True)
+
+@app.route('/my_profile', methods=['GET'])
+def my_profile():
+    return render_template('my_profile.html')
+
+
+@app.route('/update_info', methods=['POST'])
+def add_info():
+    gender = request.form['gender']
+    interested_in = request.form['interested_in']
+    dob = (list(map(int, request.form['dob'].split('.'))))
+    result = users.update_info(gender, interested_in, dob)
+    return redirect('/my_profile')
+
+
 
 @app.route('/logout')
 def logout():

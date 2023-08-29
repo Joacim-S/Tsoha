@@ -4,6 +4,7 @@ from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 from flask import session
+from datetime import date
 
 def login(username, password):
     sql = text('SELECT id, password FROM users WHERE username=:username')
@@ -42,3 +43,10 @@ def logout():
     del session['username']
     del session['user_id']
     del session['csrf_token']
+
+def update_info(gender, interested_in, dob):
+    try:
+        date_test = date(dob[2], dob[1], dob[0])
+    except:
+        return 'date_error'
+    sql = text('UPDATE users SET gender = :gender, interested_in = :interested_in, dob = :dob')
