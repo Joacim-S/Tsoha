@@ -4,7 +4,7 @@ from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 from flask import session
-from datetime import date
+from datetime import datetime, timedelta, date
 
 def login(username, password):
     sql = text('SELECT * FROM users WHERE username=:username')
@@ -79,19 +79,15 @@ def compile_info(new_info):
         if value == None:
             missing_info = True
     
-    print(updated_info)
     return updated_info, date_error, missing_info
 
 def convert_date(old_date, is_dob=False):
     try:
         date_temp = (list(map(int, old_date.split('.'))))
-        print(date_temp)
         date_final = date(date_temp[2], date_temp[1], date_temp[0])
-        if is_dob and (date.today() < date_final or date_final.year < 1900):
-            print('WHAT')
+        if is_dob and (date_final.year < 1900 or (date.today() - date_final).days < 18*365):
             return False
         else:
-            print('OK')
             return date_final
     except:
         return False

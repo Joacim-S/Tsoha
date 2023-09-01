@@ -21,7 +21,7 @@
     <p>Muut</p>
     <input type='radio' name='o_interest' value=True> Kyllä
     <input type='radio' name='o_interest' value=False> Ei
-    <p>Syntymäaika (pp.kk.vvvv):</p>
+    <p>Syntymäaika (pp.kk.vvvv) Huomioithan, että alustan ikäraja on 18 vuotta.</p>
     <input type='text' name='dob'> 
     <input type='submit' value='Tallenna'>
 </form>
@@ -29,8 +29,5 @@
 <p>Virheellinen päivämäärä</p>
 {% endif %}
 {% if missing_info %}
-<p>Täytä kaikki puuttuvat tiedot.</p>
-{% endif %}
-{% if not failed %}
-<p>Kaikki äsken syötetty tallennettiin.</p>
+<p>Täytä kaikki puuttuvat tiedot. Äsken syötetyt tiedot tallennettiin.</p>
 {% endif %}
