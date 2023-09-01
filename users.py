@@ -84,10 +84,14 @@ def compile_info(new_info):
 def convert_date(old_date, is_dob=False):
     try:
         date_temp = (list(map(int, old_date.split('.'))))
-        date_final = date(date_temp[2], date_temp[1], date_temp[0])
-        if is_dob and (date_final.year < 1900 or (date.today() - date_final).days < 18*365):
-            return False
-        else:
-            return date_final
     except:
         return False
+    date_final = date(date_temp[2], date_temp[1], date_temp[0])
+    if is_dob:
+        today = date.today()
+        age = today.year - date_final.year - ((date_final.month, date_final.day) < (today.month, today.day))
+        print(age)
+        if (date_final.year < 1900) or age < 18:
+            return False
+            
+    return date_final
