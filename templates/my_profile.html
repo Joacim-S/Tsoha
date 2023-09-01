@@ -1,20 +1,3 @@
 <h1>NerDate</h1>
 <hr>
 <p>Tervetuloa {{ session.username }}</p>
-{% if first_login %}
-<p>Aloitetaan lisäämällä perustietosi.</p>
-<form action='/add_info' method='POST'>
-    <p>Sukupuolesi:</p>
-    <input type='radio' name='gender' value='1'> Nainen
-    <input type='radio' name='gender' value='2'> Mies
-    <input type='radio' name='gender' value='3'> Muu
-    <p>Kiinnostunut:</p>
-    <input type='checkbox' name='interested_in' value='1'> Naiset
-    <input type='checkbox' name='interested_in' value='2'> Miehet
-    <input type='checkbox' name='interested_in' value='3'> Muut
-    <p>Syntymäaika (pp.kk.vvvv):</p>
-    <input type='text' name='dob'> 
-    <input type='submit' value='Tallenna'>
-</form>
-
-{% endif %}

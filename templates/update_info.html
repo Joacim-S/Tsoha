@@ -1,0 +1,36 @@
+<h1>NerDate</h1>
+<hr>
+<h2>Perustiedot</h2>
+<p>Olet kirjautunut tunnuksella {{ session.username }}</p>
+<p>Täällä voit lisätä tai muokata perustietojasi.</p>
+<p>Täytä kaikki kentät ensimmäisellä kirjautumisellasi.</p>
+<p>Tietoja päivittäessä voit täyttää vain kentät, joita haluat päivittää.</p>
+<form action='/update_info' method='POST'>
+    <input type='text' name='displayname'> Nimesi, joka näkyy muille
+    <p>Sukupuolesi:</p>
+    <input type='radio' name='gender' value='f'> Nainen
+    <input type='radio' name='gender' value='m'> Mies
+    <input type='radio' name='gender' value='o'> Muu
+    <p>Kiinnostunut:</p>
+    <p>Naiset</p>
+    <input type='radio' name='f_interest' value=True> Kyllä
+    <input type='radio' name='f_interest' value=False> Ei
+    <p>Miehet</p>
+    <input type='radio' name='m_interest' value=True> Kyllä
+    <input type='radio' name='m_interest' value=False> Ei
+    <p>Muut</p>
+    <input type='radio' name='o_interest' value=True> Kyllä
+    <input type='radio' name='o_interest' value=False> Ei
+    <p>Syntymäaika (pp.kk.vvvv):</p>
+    <input type='text' name='dob'> 
+    <input type='submit' value='Tallenna'>
+</form>
+{% if date_error %}
+<p>Virheellinen päivämäärä</p>
+{% endif %}
+{% if missing_info %}
+<p>Täytä kaikki puuttuvat tiedot.</p>
+{% endif %}
+{% if not failed %}
+<p>Kaikki äsken syötetty tallennettiin.</p>
+{% endif %}

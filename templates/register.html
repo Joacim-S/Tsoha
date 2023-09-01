@@ -1,13 +1,11 @@
 <h1>NerDate</h1>
 <form action='/create' method='POST'>
-    <p>Nimi, joka näytetään muille<br>
-    <input type='text' name='displayname'></p>
-    <p>Käyttäjätunnus, jolla kirjaudut sisään<br>
-    <input type='text' name='username'></p>
-    <p>salasana<br>
-    <input type='text' name='password1'></p>
-    <p>salasana uudelleen<br>
-    <input type='text' name='password2'></p>
+    <p>Käyttäjätunnus, jolla kirjaudut sisään (ei näy muille)<br>
+    <input type='text' name='username' required></p>
+    <p>Salasana<br>
+    <input type='password' name='password1' required></p>
+    <p>Salasana uudelleen<br>
+    <input type='password' name='password2' required></p>
     <input type='submit' value='Luo tunnus'>
 </form>
 {% if error == 'user_exists' %}
