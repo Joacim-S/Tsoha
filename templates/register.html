@@ -1,4 +1,7 @@
-<h1>NerDate</h1>
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Rekisteröinti</h2>
 <form action='/create' method='POST'>
     <p>Käyttäjätunnus, jolla kirjaudut sisään (ei näy muille)<br>
     <input type='text' name='username' required></p>
@@ -14,3 +17,5 @@
 {% if error == 'pass_missmatch' %}
 <p>Salasanat eivät täsmää!</p>
 {% endif %}
+
+{% endblock %}

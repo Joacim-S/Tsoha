@@ -33,7 +33,18 @@ def create():
 
 @app.route('/my_profile', methods=['GET'])
 def my_profile():
-    return render_template('my_profile.html')
+    info = users.get_info()
+    likes, dislikes = users.get_likes()
+    print(likes)
+    return render_template('my_profile.html', displayname = info[0], gender = users.translate_gender(info[1]), f_interest = info[2], 
+                            m_interest = info[3], o_interest = info[4], dob = info[5], likes = likes, dislikes = dislikes)
+
+@app.route('/my_likes', methods=['GET', 'POST'])
+def my_likes():
+    if request.method == 'GET':
+        return render_template('my_likes.html')
+    if request.method == 'POST':
+        users.chech_csrf()
 
 
 @app.route('/update_info', methods=['GET', 'POST'])
@@ -42,6 +53,8 @@ def update_info():
         return render_template('update_info.html')
 
     if request.method == 'POST':
+        users.chech_csrf()
+        
         displayname = request.form['displayname']
         radiovalues = []
         radios = ['gender', 'f_interest', 'm_interest', 'o_interest']
@@ -55,7 +68,7 @@ def update_info():
         result = users.update_info([displayname, radiovalues[0], radiovalues[1], radiovalues[2], radiovalues[3], dob])
         if result[0] or result[1] or result[2]:
             return render_template('update_info.html', date_error = result[0], missing_info = result[1], failed = result[2])
-        return redirect('/')
+        return redirect('/my_profile')
 
 
 

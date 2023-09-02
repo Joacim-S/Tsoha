@@ -1,3 +1,36 @@
-<h1>NerDate</h1>
-<hr>
-<p>Tervetuloa {{ session.username }}</p>
+{% extends "layout.html" %}
+{% block content %}
+
+<p>Tervetuloa profiiliisi {{ session.username }}</p>
+<h2>Perustiedot</h2>
+<p>Sukupuolesi:</p>{{ gender }}
+<p>Kiinnostunut:</p>
+<ul>
+    {% if f_interest %}
+    <li>Naisista</li>
+    {% endif %}
+    {% if m_interest %}
+    <li>Miehistä</li>
+    {% endif %}
+    {% if o_interest %}
+    <li>Muunsukupuolisista</li>
+    {% endif %}
+</ul>
+<p>Tykkäät näistä:</p>
+<ul>
+    {% for item in likes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
+<p>Et tykkää näistä:</p>
+<ul>
+    {% for item in dislikes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
+
+<a href='/update_info'>Muokkaa perustietojasi</a>
+<br>
+<a href='/my_likes'>Muokkaa tykkäyksiäsi</a>
+
+{% endblock %}

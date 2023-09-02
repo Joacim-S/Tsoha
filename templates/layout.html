@@ -1,0 +1,13 @@
+<!doctype html>
+<title>NerDate</title>
+<h1>NerDate</h1>
+{% if session.displayname %}
+<a href='/'>Etusivu</a> |
+<a href='/my_profile'>Oma profiili</a>
+{% endif %}
+<hr>
+{% block content %}{% endblock %}
+<br>
+{% if session.username %}
+<a href='/logout'>Kirjaudu ulos</a>
+{% endif %}

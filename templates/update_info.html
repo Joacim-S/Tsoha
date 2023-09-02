@@ -1,5 +1,6 @@
-<h1>NerDate</h1>
-<hr>
+{% extends "layout.html" %}
+{% block content %}
+
 <h2>Perustiedot</h2>
 <p>Olet kirjautunut tunnuksella {{ session.username }}</p>
 <p>Täällä voit lisätä tai muokata perustietojasi.</p>
@@ -23,6 +24,7 @@
     <input type='radio' name='o_interest' value=False> Ei
     <p>Syntymäaika (pp.kk.vvvv) Huomioithan, että alustan ikäraja on 18 vuotta.</p>
     <input type='text' name='dob'> 
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type='submit' value='Tallenna'>
 </form>
 {% if date_error %}
@@ -31,3 +33,5 @@
 {% if missing_info %}
 <p>Täytä kaikki puuttuvat tiedot. Äsken syötetyt tiedot tallennettiin.</p>
 {% endif %}
+
+{% endblock %}

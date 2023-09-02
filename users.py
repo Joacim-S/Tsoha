@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
-from flask import session
+from flask import session, request
 from datetime import datetime, timedelta, date
 
 def login(username, password):
@@ -29,7 +29,7 @@ def create_user(username, password1, password2):
     if password1 != password2:
         return 'pass_missmatch'
     password_hash = generate_password_hash(password1)
-    sql = text('INSERT INTO users (username, password) VALUES (:username, :password)')
+    sql = text('INSERT INTO users (username, password, visible) VALUES (:username, :password, True)')
 
     try:
         db.session.execute(sql, {'username':username, 'password':password_hash})
@@ -43,6 +43,7 @@ def logout():
     del session['username']
     del session['user_id']
     del session['csrf_token']
+    del session['displayname']
 
 def update_info(new_info):
     updated_info, date_error, missing_info = compile_info(new_info)
@@ -52,12 +53,13 @@ def update_info(new_info):
     db.session.execute(sql, {'displayname':updated_info[0], 'gender':updated_info[1], 'f_interest':updated_info[2], \
     'm_interest':updated_info[3], 'o_interest':updated_info[4], 'dob':updated_info[5], 'id':session['user_id']})
     db.session.commit()
+
+    if not missing_info:
+        session['displayname'] = updated_info[0]
     return (date_error, missing_info, failed)
 
 def compile_info(new_info):
-    sql = text('SELECT displayname, gender, f_interest, m_interest, o_interest, dob FROM users WHERE id=:id')
-    result = db.session.execute(sql, {'id':session['user_id']})
-    old_info = result.fetchone()
+    old_info = get_info()
     updated_info = []
     missing_info = False
     date_error = False
@@ -88,10 +90,44 @@ def convert_date(old_date, is_dob=False):
         return False
     date_final = date(date_temp[2], date_temp[1], date_temp[0])
     if is_dob:
-        today = date.today()
-        age = today.year - date_final.year - ((date_final.month, date_final.day) < (today.month, today.day))
-        print(age)
-        if (date_final.year < 1900) or age < 18:
+        age = calculate_age(date_final)
+        if age < 18 or age > 120:
             return False
-            
+    
     return date_final
+
+def calculate_age(dob):
+    today = date.today()
+    age = today.year - dob.year - ((dob.month, dob.day) < (today.month, today.day))
+    return age
+
+def chech_csrf():
+    if session['csrf_token'] != request.form['csrf_token']:
+        abort(403)
+
+def get_info(id = -1):
+    if id == -1:
+        id = session['user_id']
+    sql = text('SELECT displayname, gender, f_interest, m_interest, o_interest, dob FROM users WHERE id=:id')
+    result = db.session.execute(sql, {'id':id})
+    return result.fetchone()
+
+def get_likes(id = -1):
+    if id == -1:
+        id = session['user_id']
+    sql = text('SELECT item FROM things, likes WHERE things.id=likes.item_id AND likes.user_id=:id AND likes.likes=:like')
+    result = db.session.execute(sql, {'id':id, 'like':True})
+    likes = result.fetchall()
+    result = db.session.execute(sql, {'id':id, 'like':False})
+    dislikes = result.fetchall()
+    return likes, dislikes
+
+
+
+def translate_gender(character):
+    if character == 'f':
+        return 'Nainen'
+    if character == 'm':
+        return 'Mies'
+    if character == 'o':
+        return 'Muu'

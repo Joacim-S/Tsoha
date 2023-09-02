@@ -1,15 +1,16 @@
-<h1>NerDate</h1>
-<hr>
+{% extends "layout.html" %}
+{% block content %}
+
 {% if session.username %}
-<p>Olet kirjautunut tunnuksella {{ session.username }}</p>
-<a href='/logout'>Kirjaudu ulos</a>
+<p>Hei {{ session.username }}!</p>
+
 {% else %}
 <p>Tervetuloa!</p>
 <form action='/login' method='POST'>
     <p>Käyttäjätunnus<br>
     <input type='text' name='username'></p>
     <p>salasana<br>
-    <input type='text' name='password'></p>
+    <input type='password' name='password'></p>
     <input type='submit' value='kirjaudu'>
     {% if credential_error %}
     <p>Väärä tunnus tai salasana</p>
@@ -17,3 +18,5 @@
 </form>
 <b> <a href='/register'> Luo käyttäjä </a></b>
 {% endif %}
+
+{% endblock %}
