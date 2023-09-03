@@ -9,9 +9,16 @@ Nörteille suunnattu deittisovellus, jossa painotus on tilastoitavasa datassa pr
 * Mahdollisia lisäominaisuuksiä riippuen laajuuden riittävyydestä:
   * Ryhmäkeskustelut
   * Profiilikuvat
-## Välipalautus 3
-* Käyttäjän luonti ja kirjautuminen testattavissa
-* Sovellusta voi testata paikallisesti
+## Loppupalautus
+* Sovellus on yhä melko keskeneräinen pitkälti kesätöiden takia
+* Sovellusta voi testata paikallisesti alempaa löytyvän ohjeen avulla
+* Käyttäjän luonti ja kirjautuminen toimii
+* Profiilin perustiedot voi lisätä, ja niitä voi muokata
+* Tykkäyksiä/ei tykkäyksiä voi lisätä ja muokata
+* Muiden tilien selausnäkymässä näkee vain yhden tietoja raa'assa muodossa, mikäli on olemassa käyttäjä, jonka suuntautuminen ja sukupuoli sopivat.
+  * En saanut pyyntöjä ja estoja huomioivaa sql queryä toimimaan.
+* Viestiominaisuus puuttuu
+* Pyyntöjä ei voi katsella
 * Kloonaa repositorio koneellesi, ja luo sen juurikansioon .env tiedosto.
 * Lisää .env tiedostoon rivit:
   * DATABASE_URL=tietokannan-paikallinen-osoite
@@ -22,6 +29,6 @@ Nörteille suunnattu deittisovellus, jossa painotus on tilastoitavasa datassa pr
   * $ pip install -r ./requirements.txt
 
 * Määritä tietokanta komennolla:
-  * $ psql < schema.sql
+  * $ psql < schemas/schema.sql
 * Käynnistä sovellus komennolla:
   * $ flask run
