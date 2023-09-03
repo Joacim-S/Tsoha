@@ -80,15 +80,16 @@ def update_info():
 
 @app.route('/browse', methods=['GET', 'POST'])
 def browse():
-    user, likes, other_id = b.fetch_next()
-    if request.method == 'GET':
-        return render_template('browse.html', user = user, likes = likes)
-
     if request.method == 'POST':
         users.check_csrf()
         choice = request.form['choice']
+        other_id = request.form['id']
         b.handle_choice(choice, other_id)
-        return redirect('/')
+
+    profile = b.fetch_next()
+    if not profile:
+        return render_template('browse.html', not_found = True)
+    return render_template('browse.html', user = profile[0], likes = profile[1], id = profile[2])
 
 
 @app.route('/logout')

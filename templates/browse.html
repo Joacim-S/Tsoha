@@ -9,6 +9,7 @@
     <input type='radio' name='choice' value='block' required> Estä
     <br>
     <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
+    <input type='hidden' name='id' value='{{ id }}'>
     <input type='submit' value='Tallenna ja näytä seuraava'>
 </form>
 {% endblock %}

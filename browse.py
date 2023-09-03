@@ -14,9 +14,9 @@ def fetch_next():
         if own_info[2+i]:
             applicable_genders.append(genders[i])
     applicable_genders.append('x')
+    sql = text(f'SELECT u.id FROM users u WHERE u.{required_interest}=True \
+                AND u.gender IN {tuple(applicable_genders)}')
 
-    print(tuple(applicable_genders))
-    sql = text(f'SELECT id FROM users WHERE {required_interest}=True AND gender IN {tuple(applicable_genders)} AND id!={session["user_id"]}')
     result = db.session.execute(sql).fetchone()
     if result:
         other_info = users.get_info(result.id)
