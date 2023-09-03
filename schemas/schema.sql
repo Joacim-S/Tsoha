@@ -13,7 +13,7 @@ CREATE TABLE users (
 
 CREATE TABLE things(
     id SERIAL PRIMARY KEY,
-    item TEXT
+    item TEXT UNIQUE
 );
 
 CREATE TABLE likes(

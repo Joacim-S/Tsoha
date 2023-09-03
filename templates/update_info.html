@@ -24,7 +24,7 @@
     <input type='radio' name='o_interest' value=False> Ei
     <p>Syntymäaika (pp.kk.vvvv) Huomioithan, että alustan ikäraja on 18 vuotta.</p>
     <input type='text' name='dob'> 
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
     <input type='submit' value='Tallenna'>
 </form>
 {% if date_error %}

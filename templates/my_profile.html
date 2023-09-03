@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<p>Tervetuloa profiiliisi {{ session.username }}</p>
-<h2>Perustiedot</h2>
+<h2>Tervetuloa profiiliisi {{ session.username }}</h2>
+<h3>Perustiedot</h3>
 <p>Sukupuolesi:</p>{{ gender }}
 <p>Kiinnostunut:</p>
 <ul>
@@ -16,6 +16,7 @@
     <li>Muunsukupuolisista</li>
     {% endif %}
 </ul>
+<h3>Tykkäykset</h3>
 <p>Tykkäät näistä:</p>
 <ul>
     {% for item in likes %}

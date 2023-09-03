@@ -18,10 +18,10 @@ def login(username, password):
         session['user_id'] = user[0]
         session['username'] = username
         session['csrf_token'] = secrets.token_hex(16)
-        if user.displayname == None:
-            return 'new'
-
-        return True
+        if user.displayname:
+            session['displayname'] = user.displayname
+            return True
+        return 'new'
     
     return False
     
@@ -43,7 +43,10 @@ def logout():
     del session['username']
     del session['user_id']
     del session['csrf_token']
-    del session['displayname']
+    try:
+        del session['displayname']
+    except:
+        pass
 
 def update_info(new_info):
     updated_info, date_error, missing_info = compile_info(new_info)
@@ -101,7 +104,7 @@ def calculate_age(dob):
     age = today.year - dob.year - ((dob.month, dob.day) < (today.month, today.day))
     return age
 
-def chech_csrf():
+def check_csrf():
     if session['csrf_token'] != request.form['csrf_token']:
         abort(403)
 
@@ -122,8 +125,6 @@ def get_likes(id = -1):
     dislikes = result.fetchall()
     return likes, dislikes
 
-
-
 def translate_gender(character):
     if character == 'f':
         return 'Nainen'
@@ -131,3 +132,37 @@ def translate_gender(character):
         return 'Mies'
     if character == 'o':
         return 'Muu'
+
+def get_item_id(item):
+    item = item.lower()
+    sql = text('SELECT id FROM things WHERE things.item=:item')
+    result = db.session.execute(sql, {'item':item})
+    return result.fetchone()
+
+def add_thing(item):
+    item = item.lower()
+    item_id = get_item_id(item)
+
+    if item_id:
+        return item_id
+
+    sql = text('INSERT INTO things (item) VALUES (:item)')
+    db.session.execute(sql, {'item':item})
+    db.session.commit()
+    return get_item_id(item)
+
+def update_like(item, like):
+    item_id = add_thing(item)
+    sql = text('SELECT id FROM likes WHERE item_id=:item_id AND user_id=:user_id')
+    result = db.session.execute(sql, {'item_id':item_id.id, 'user_id':session['user_id']})
+    like_id = result.fetchone()
+
+    if like_id:
+        sql = text('UPDATE likes SET likes=:like WHERE id=:like_id')
+        db.session.execute(sql, {'like_id':like_id.id, 'like':like})
+        db.session.commit()
+        return
+    
+    sql = text('INSERT INTO likes (user_id, item_id, likes) VALUES (:user_id, :item_id, :likes)')
+    db.session.execute(sql, {'user_id':session['user_id'], 'item_id':item_id.id, 'likes':like})
+    db.session.commit()

@@ -1,5 +1,25 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>tykkäyksesi</h2>
-
+<h2>Tykkäyksesi</h2>
+<form action='/my_likes' method='POST'>
+    <p>Lisää tai muuta:<br>
+    <input type='text' name='item'></p>
+    <input type='radio' name='like' value=True> Tykkään
+    <input type='radio' name='like' value=False> En tykkää
+    <br>
+    <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
+    <input type='submit' value='Tallenna'>
+</form>
+<p>Tykkäät näistä:</p>
+<ul>
+    {% for item in likes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
+<p>Et tykkää näistä:</p>
+<ul>
+    {% for item in dislikes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
