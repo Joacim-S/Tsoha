@@ -1,11 +1,11 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block content %}
 <h2>Tykkäyksesi</h2>
 <form action='/my_likes' method='POST'>
     <p>Lisää tai muuta:<br>
-    <input type='text' name='item'></p>
-    <input type='radio' name='like' value=True> Tykkään
-    <input type='radio' name='like' value=False> En tykkää
+    <input type='text' name='item' required></p>
+    <input type='radio' name='like' value=True required> Tykkään
+    <input type='radio' name='like' value=False required> En tykkää
     <br>
     <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
     <input type='submit' value='Tallenna'>

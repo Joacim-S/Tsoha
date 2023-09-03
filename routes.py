@@ -1,6 +1,7 @@
 from app import app
 from flask import redirect, render_template, request
 import users
+import browse as b
 
 @app.route('/')
 def index():
@@ -77,6 +78,17 @@ def update_info():
             return render_template('update_info.html', date_error = result[0], missing_info = result[1], failed = result[2])
         return redirect('/my_profile')
 
+@app.route('/browse', methods=['GET', 'POST'])
+def browse():
+    user, likes, other_id = b.fetch_next()
+    if request.method == 'GET':
+        return render_template('browse.html', user = user, likes = likes)
+
+    if request.method == 'POST':
+        users.check_csrf()
+        choice = request.form['choice']
+        b.handle_choice(choice, other_id)
+        return redirect('/')
 
 
 @app.route('/logout')

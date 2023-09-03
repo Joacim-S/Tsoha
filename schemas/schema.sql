@@ -39,7 +39,7 @@ CREATE TABLE blocks(
 
 CREATE TABLE requests(
     id SERIAL PRIMARY KEY,
-    content INTEGER,
+    content BOOLEAN,
     sender_id INTEGER REFERENCES users,
     receiver_id INTEGER REFERENCES users,
     sent_at TIMESTAMP
