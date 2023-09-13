@@ -23,11 +23,21 @@ CREATE TABLE likes(
     likes BOOLEAN
 );
 
+CREATE TABLE requests(
+    id SERIAL PRIMARY KEY,
+    content BOOLEAN,
+    answer BOOLEAN,
+    sender_id INTEGER REFERENCES users,
+    receiver_id INTEGER REFERENCES users,
+    sent_at TIMESTAMP
+);
+
 CREATE TABLE messages(
     id SERIAL PRIMARY KEY,
     content TEXT,
     sender_id INTEGER REFERENCES users,
     receiver_id INTEGER REFERENCES users,
+    convo_id INTEGER REFERENCES requests,
     sent_at TIMESTAMP
 );
 
@@ -35,12 +45,4 @@ CREATE TABLE blocks(
     id SERIAL PRIMARY KEY,
     blocker_id INTEGER REFERENCES users,
     blocked_id INTEGER REFERENCES users
-);
-
-CREATE TABLE requests(
-    id SERIAL PRIMARY KEY,
-    content BOOLEAN,
-    sender_id INTEGER REFERENCES users,
-    receiver_id INTEGER REFERENCES users,
-    sent_at TIMESTAMP
 );

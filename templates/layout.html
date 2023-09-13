@@ -9,5 +9,8 @@
 {% block content %}{% endblock %}
 <br>
 {% if session.username %}
+<a href='/browse'> Selaa käyttäjiä</a> |
+<a href='/requests'> viestipyynnöt</a> |
+<a href='/messages'> Viestit</a> <br>
 <a href='/logout'>Kirjaudu ulos</a>
 {% endif %}

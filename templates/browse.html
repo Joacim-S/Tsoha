@@ -3,13 +3,26 @@
 {{ user }}
 <br>
 {{ likes }}
+{% if user %}
+{% if mode %}
+<form action='/requests' method='POST'>
+{% else %}
 <form action='/browse' method='POST'>
-    <input type='radio' name='choice' value=True required> Viestipyyntö
-    <input type='radio' name='choice' value=False required> Ohita
+{% endif %}
+    <input type='radio' name='choice' value=True required>{% if mode %} Hyväksy {% else %} Viestipyyntö {% endif %}
+    <input type='radio' name='choice' value=False required> {% if mode %} Poista {% else %} Ohita {% endif %}
     <input type='radio' name='choice' value='block' required> Estä
     <br>
     <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
+    <input type='hidden' name='mode' value='{{ mode }}'>
     <input type='hidden' name='id' value='{{ id }}'>
     <input type='submit' value='Tallenna ja näytä seuraava'>
 </form>
+{% else %}
+{% if mode %}
+<p>Ei saapuneita pyyntöjä</p>
+{% else %}
+<p>Ei yhtään sopivaa kumppaniehdokasta :(</p>
+{% endif %}
+{% endif %}
 {% endblock %}

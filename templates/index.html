@@ -3,9 +3,6 @@
 
 {% if session.username %}
 <p>Hei {{ session.username }}!</p>
-<a href='/browse'> Selaa käyttäjiä</a> |
-<a href='/requests'> viestipyynnöt</a> |
-<a href='/messages'> Viestit</a>
 {% else %}
 <p>Tervetuloa!</p>
 <form action='/login' method='POST'>

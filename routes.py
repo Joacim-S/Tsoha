@@ -2,6 +2,7 @@ from app import app
 from flask import redirect, render_template, request
 import users
 import browse as b
+import messages
 
 @app.route('/')
 def index():
@@ -96,3 +97,16 @@ def browse():
 def logout():
     users.logout()
     return redirect('/')
+
+@app.route('/requests', methods=['GET', 'POST'])
+def requests():
+    if request.method == 'POST':
+        users.check_csrf()
+        choice = request.form['choice']
+        other_id = request.form['id']
+        messages.answer_request(choice, other_id)
+
+    profile = messages.next_request()
+    if not profile:
+        return render_template('browse.html', not_found = True, mode=True)
+    return render_template('browse.html', user = profile[0], likes = profile[1], id = profile[2], mode=True)
