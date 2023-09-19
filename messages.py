@@ -23,3 +23,7 @@ def answer_request(choice, other_id):
     sql = text('UPDATE requests SET answer=:choice, sent_at=NOW() WHERE receiver_id=:user_id AND sender_id=:other_id')
     db.session.execute(sql, {'user_id':session['user_id'], 'choice':choice, 'other_id':other_id})
     db.session.commit()
+
+def send_message(content, receiver_id, convo_id):
+    sql = text('INSERT INTO messages (content, receiver_id, convo_id, sender_id, sent_at) VALUES \
+                (:content, :receiver, :convo_id, :sender, NOW())')

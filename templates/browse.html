@@ -1,9 +1,22 @@
 {% extends 'layout.html' %}
 {% block content %}
-{{ user }}
+{% if displayname %}
+{{ displayname }}
+<p>Sukupuoli: {{ gender }} </p>
+<p>Ikä: {{ age }}</p>
 <br>
-{{ likes }}
-{% if user %}
+<p>Tykkää näistä:</p>
+<ul>
+    {% for item in likes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
+<p>Ei tykkää näistä:</p>
+<ul>
+    {% for item in dislikes %}
+    <li>{{item.item}}</li>
+    {% endfor %}
+</ul>
 {% if mode %}
 <form action='/requests' method='POST'>
 {% else %}

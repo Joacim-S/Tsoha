@@ -1,5 +1,6 @@
 from app import app
 from flask import redirect, render_template, request
+from datetime import datetime, date
 import users
 import browse as b
 import messages
@@ -38,7 +39,7 @@ def my_profile():
     info = users.get_info()
     likes, dislikes = users.get_likes()
     return render_template('my_profile.html', displayname = info[0], gender = users.translate_gender(info[1]), f_interest = info[2], 
-                            m_interest = info[3], o_interest = info[4], dob = info[5], likes = likes, dislikes = dislikes)
+                            m_interest = info[3], o_interest = info[4], dob = info[5].strftime('%d.%m.%Y'), likes = likes, dislikes = dislikes)
 
 @app.route('/my_likes', methods=['GET', 'POST'])
 def my_likes():
@@ -90,7 +91,8 @@ def browse():
     profile = b.fetch_next()
     if not profile:
         return render_template('browse.html', not_found = True)
-    return render_template('browse.html', user = profile[0], likes = profile[1], id = profile[2])
+    age = users.calculate_age(profile[0].dob)
+    return render_template('browse.html', displayname = profile[0][0], gender = users.translate_gender(profile[0][1]), age = age, likes = profile[1][0], dislikes = profile[1][1], id = profile[2])
 
 
 @app.route('/logout')
