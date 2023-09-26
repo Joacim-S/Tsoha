@@ -1,0 +1,6 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% for name in convos %}
+{{name.displayname}}
+{% endfor %}
+{% endblock %}

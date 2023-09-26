@@ -3,7 +3,7 @@ from flask import redirect, render_template, request
 from datetime import datetime, date
 import users
 import browse as b
-import messages
+import messages as m
 
 @app.route('/')
 def index():
@@ -106,9 +106,15 @@ def requests():
         users.check_csrf()
         choice = request.form['choice']
         other_id = request.form['id']
-        messages.answer_request(choice, other_id)
+        m.answer_request(choice, other_id)
 
-    profile = messages.next_request()
+    profile = m.next_request()
     if not profile:
         return render_template('browse.html', not_found = True, mode=True)
-    return render_template('browse.html', user = profile[0], likes = profile[1], id = profile[2], mode=True)
+    age = users.calculate_age(profile[0].dob)
+    return render_template('browse.html', displayname = profile[0][0], gender = users.translate_gender(profile[0][1]), age = age, likes = profile[1][0], dislikes = profile[1][1], id = profile[2], mode=True)
+
+@app.route('/messages', methods=['GET'])
+def messages():
+    convos = m.show_convos()
+    return render_template('messages.html', convos=convos)
