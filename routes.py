@@ -1,6 +1,5 @@
-from app import app
 from flask import redirect, render_template, request
-from datetime import datetime, date
+from app import app
 import users
 import browse as b
 import messages as m
@@ -38,8 +37,11 @@ def create():
 def my_profile():
     info = users.get_info()
     likes, dislikes = users.get_likes()
-    return render_template('my_profile.html', displayname = info[0], gender = users.translate_gender(info[1]), f_interest = info[2], 
-                            m_interest = info[3], o_interest = info[4], dob = info[5].strftime('%d.%m.%Y'), likes = likes, dislikes = dislikes)
+    return render_template('my_profile.html', displayname = info[0],
+        gender = users.translate_gender(info[1]),
+        f_interest = info[2], m_interest = info[3], o_interest = info[4],
+        dob = info[5].strftime('%d.%m.%Y'),
+        likes = likes, dislikes = dislikes)
 
 @app.route('/my_likes', methods=['GET', 'POST'])
 def my_likes():
@@ -64,7 +66,6 @@ def update_info():
 
     if request.method == 'POST':
         users.check_csrf()
-        
         displayname = request.form['displayname']
         radiovalues = []
         radios = ['gender', 'f_interest', 'm_interest', 'o_interest']
@@ -73,11 +74,13 @@ def update_info():
                 radiovalues.append(request.form[radios[i]])
             except:
                 radiovalues.append(None)
-        
+
         dob = request.form['dob']
-        result = users.update_info([displayname, radiovalues[0], radiovalues[1], radiovalues[2], radiovalues[3], dob])
+        result = users.update_info([displayname, radiovalues[0], radiovalues[1],
+            radiovalues[2], radiovalues[3], dob])
         if result[0] or result[1] or result[2]:
-            return render_template('update_info.html', date_error = result[0], missing_info = result[1], failed = result[2])
+            return render_template('update_info.html', date_error = result[0],
+                                    missing_info = result[1], failed = result[2])
         return redirect('/my_profile')
 
 @app.route('/browse', methods=['GET', 'POST'])
@@ -92,7 +95,10 @@ def browse():
     if not profile:
         return render_template('browse.html', not_found = True)
     age = users.calculate_age(profile[0].dob)
-    return render_template('browse.html', displayname = profile[0][0], gender = users.translate_gender(profile[0][1]), age = age, likes = profile[1][0], dislikes = profile[1][1], id = profile[2])
+    return render_template('browse.html', displayname = profile[0][0],
+                            gender = users.translate_gender(profile[0][1]),
+                            age = age, likes = profile[1][0],
+                            dislikes = profile[1][1], id = profile[2])
 
 
 @app.route('/logout')
@@ -112,7 +118,11 @@ def requests():
     if not profile:
         return render_template('browse.html', not_found = True, mode=True)
     age = users.calculate_age(profile[0].dob)
-    return render_template('browse.html', displayname = profile[0][0], gender = users.translate_gender(profile[0][1]), age = age, likes = profile[1][0], dislikes = profile[1][1], id = profile[2], mode=True)
+    return render_template('browse.html', displayname = profile[0][0],
+                            gender = users.translate_gender(profile[0][1]),
+                            age = age, likes = profile[1][0],
+                            dislikes = profile[1][1],
+                            id = profile[2], mode=True)
 
 @app.route('/messages', methods=['GET'])
 def messages():

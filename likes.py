@@ -1,6 +1,6 @@
-from db import db
 from flask import session
 from sqlalchemy.sql import text
+from db import db
 
 def get_item_id(item):
     item = item.lower()
@@ -30,17 +30,18 @@ def update_like(item, like):
         db.session.execute(sql, {'like_id':like_id.id, 'like':like})
         db.session.commit()
         return
-    
+
     sql = text('INSERT INTO likes (user_id, item_id, likes) VALUES (:user_id, :item_id, :likes)')
     db.session.execute(sql, {'user_id':session['user_id'], 'item_id':item_id.id, 'likes':like})
     db.session.commit()
 
-def get_likes(id=-1):
-    if id == -1:
-        id = session['user_id']
-    sql = text('SELECT item FROM things, likes WHERE things.id=likes.item_id AND likes.user_id=:id AND likes.likes=:like')
-    result = db.session.execute(sql, {'id':id, 'like':True})
+def get_likes(uid=-1):
+    if uid == -1:
+        uid = session['user_id']
+    sql = text('SELECT item FROM things, likes WHERE things.id=likes.item_id \
+                AND likes.user_id=:id AND likes.likes=:like')
+    result = db.session.execute(sql, {'id':uid, 'like':True})
     likes = result.fetchall()
-    result = db.session.execute(sql, {'id':id, 'like':False})
+    result = db.session.execute(sql, {'id':uid, 'like':False})
     dislikes = result.fetchall()
     return likes, dislikes

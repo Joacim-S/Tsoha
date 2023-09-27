@@ -1,10 +1,10 @@
 import secrets
+from datetime import date
+from flask import session, request
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
-from flask import session, request
-from datetime import datetime, timedelta, date
 import likes
 
 def login(username, password):
@@ -23,14 +23,15 @@ def login(username, password):
             session['displayname'] = user.displayname
             return True
         return 'new'
-    
+
     return False
-    
+
 def create_user(username, password1, password2):
     if password1 != password2:
         return 'pass_missmatch'
     password_hash = generate_password_hash(password1)
-    sql = text('INSERT INTO users (username, password, visible) VALUES (:username, :password, True)')
+    sql = text('INSERT INTO users (username, password, visible) \
+                VALUES (:username, :password, True)')
 
     try:
         db.session.execute(sql, {'username':username, 'password':password_hash})
@@ -52,10 +53,12 @@ def logout():
 def update_info(new_info):
     updated_info, date_error, missing_info = compile_info(new_info)
     failed = False
-    sql = text('UPDATE users SET displayname=:displayname, gender=:gender, f_interest=:f_interest,' \
-    'm_interest=:m_interest, o_interest=:o_interest, dob = :dob WHERE id=:id')
-    db.session.execute(sql, {'displayname':updated_info[0], 'gender':updated_info[1], 'f_interest':updated_info[2], \
-    'm_interest':updated_info[3], 'o_interest':updated_info[4], 'dob':updated_info[5], 'id':session['user_id']})
+    sql = text('UPDATE users SET displayname=:displayname, gender=:gender, \
+        f_interest=:f_interest,' 'm_interest=:m_interest, \
+        o_interest=:o_interest, dob = :dob WHERE id=:id')
+    db.session.execute(sql, {'displayname':updated_info[0], 'gender':updated_info[1],
+        'f_interest':updated_info[2], 'm_interest':updated_info[3],
+        'o_interest':updated_info[4], 'dob':updated_info[5], 'id':session['user_id']})
     db.session.commit()
 
     if not missing_info:
@@ -75,16 +78,16 @@ def compile_info(new_info):
         else:
             new_info[5] = None
             date_error = True
-    
-    for i in range(len(old_info)):
-        if new_info[i] == None or new_info[i] == '':
-            updated_info.append(old_info[i])
+
+    for i , old_item in enumerate(old_info):
+        if new_info[i] is None or new_info[i] == '':
+            updated_info.append(old_item)
         else:
             updated_info.append(new_info[i])
     for value in updated_info:
-        if value == None:
+        if value is None:
             missing_info = True
-    
+
     return updated_info, date_error, missing_info
 
 def convert_date(old_date, is_dob=False):
@@ -97,7 +100,7 @@ def convert_date(old_date, is_dob=False):
         age = calculate_age(date_final)
         if age < 18 or age > 120:
             return False
-    
+
     return date_final
 
 def calculate_age(dob):
@@ -109,11 +112,12 @@ def check_csrf():
     if session['csrf_token'] != request.form['csrf_token']:
         abort(403)
 
-def get_info(id = -1):
-    if id == -1:
-        id = session['user_id']
-    sql = text('SELECT displayname, gender, f_interest, m_interest, o_interest, dob FROM users WHERE id=:id')
-    result = db.session.execute(sql, {'id':id})
+def get_info(uid = -1):
+    if uid == -1:
+        uid = session['user_id']
+    sql = text('SELECT displayname, gender, f_interest, m_interest, \
+                o_interest, dob FROM users WHERE id=:uid')
+    result = db.session.execute(sql, {'uid':uid})
     return result.fetchone()
 
 def translate_gender(character):
@@ -124,13 +128,13 @@ def translate_gender(character):
     if character == 'o':
         return 'Muu'
 
-def get_likes(id=-1):
-    return likes.get_likes(id)
+def get_likes(uid=-1):
+    return likes.get_likes(uid)
 
 def update_like(item, like):
     return likes.update_like(item, like)
 
-def block(id):
+def block(uid):
     sql = text('INSERT INTO blocks (blocker_id, blocked_id) VALUES (:blocker, :blocked)')
-    db.session.execute(sql, {'blocker':session['user_id'], 'blocked':id})
+    db.session.execute(sql, {'blocker':session['user_id'], 'blocked':uid})
     db.session.commit()
