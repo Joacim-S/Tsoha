@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
-{% for name in convos %}
-{{name.displayname}}
+{% for msg in msgs %}
+{{ msg }}
 {% endfor %}
 {% endblock %}

@@ -38,9 +38,28 @@ def send_message(content, receiver_id, convo_id):
                         'convo_id':convo_id, 'sender':session['user_id']})
     db.session.commit()
 
-def show_convos():
-    sql = text('SELECT DISTINCT displayname FROM users u, messages m WHERE \
+def get_convos():
+    sql = text('SELECT DISTINCT u.displayname, m.convo_id, m.content, m.sent_at \
+                FROM users u, messages m WHERE \
                 (u.id=m.receiver_id AND m.sender_id=:user_id) \
-                OR (u.id=m.sender_id AND m.receiver_id=:user_id)')
-    result = db.session.execute(sql, {'user_id':session['user_id']})
-    return result.fetchall()
+                OR (u.id=m.sender_id AND m.receiver_id=:user_id)  \
+                ORDER BY m.sent_at DESC')
+    result = db.session.execute(sql, {'user_id':session['user_id']}).fetchall()
+    return result
+
+def check_permission(convo_id):
+    sql = text('SELECT sender_id, receiver_id FROM messages WHERE \
+                convo_id=:convo_id AND \
+                (sender_id=:user_id OR receiver_id=:user_id)')
+    result = db.session.execute(sql, {'convo_id':convo_id, 'user_id':session['user_id']}).fetchone()
+    if result:
+        return True
+    else:
+        return False
+
+def get_messages(convo_id):
+    sql = text('SELECT u.displayname, m.content, m.sent_at FROM \
+                users u, messages m WHERE \
+                m.convo_id=:convo_id AND u.id=sender_id ORDER BY sent_at')
+    result = db.session.execute(sql, {'convo_id':convo_id}).fetchall()
+    return result

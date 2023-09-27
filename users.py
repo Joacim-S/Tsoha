@@ -8,7 +8,8 @@ from db import db
 import likes
 
 def login(username, password):
-    sql = text('SELECT * FROM users WHERE username=:username')
+    sql = text('SELECT id, password, displayname, gender, dob \
+                FROM users WHERE username=:username')
     result = db.session.execute(sql, {'username':username})
     user = result.fetchone()
     if not user:
@@ -19,7 +20,7 @@ def login(username, password):
         session['user_id'] = user[0]
         session['username'] = username
         session['csrf_token'] = secrets.token_hex(16)
-        if user.displayname:
+        if all(user[0:5]):
             session['displayname'] = user.displayname
             return True
         return 'new'

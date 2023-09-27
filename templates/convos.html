@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Keskustelut</h2>
+{% if convos %}
+<p>Nimi | Uusin viesti</p>
+{% for convo in convos %}
+<a href='/messages/{{ convo[1] }}'>{{ convo[0] }}</a> {{ convo[2] }}
+{% endfor %}
+{% else %}
+Sinulla ei vielä ole keskusteluja.
+{% endif %}
+{% endblock %}

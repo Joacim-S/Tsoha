@@ -124,7 +124,18 @@ def requests():
                             dislikes = profile[1][1],
                             id = profile[2], mode=True)
 
-@app.route('/messages', methods=['GET'])
-def messages():
-    convos = m.show_convos()
-    return render_template('messages.html', convos=convos)
+@app.route('/convos', methods=['GET'])
+def convos():
+    convos = m.get_convos()
+    return render_template('convos.html', convos=convos)
+
+@app.route('/messages/<int:convo_id>', methods=['GET', 'POST'])
+def messages(convo_id):
+    if request.method == 'POST':
+        users.check_csrf()
+
+    if not m.check_permission(convo_id):
+        return render_template('index.html', access_error=True)
+
+    msgs = m.get_messages(convo_id)
+    return render_template('messages.html', msgs=msgs)

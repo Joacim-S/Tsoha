@@ -12,8 +12,8 @@ def fetch_next():
     for i in range(3):
         if own_info[2+i]:
             applicable_genders.append(genders[i])
-    #The next line makes sure the tuple has more than one item so the query works
-    applicable_genders.append('x')
+        else:
+            applicable_genders.append('x') #Makes sure the list is not empty so it doensn't break the query
 
     sql = text(f'SELECT u.id FROM users u WHERE u.{required_interest}=True \
         AND u.gender IN {tuple(applicable_genders)} \
