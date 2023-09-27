@@ -105,7 +105,7 @@ def convert_date(old_date, is_dob=False):
 
 def calculate_age(dob):
     today = date.today()
-    age = today.year - dob.year - ((dob.month, dob.day) < (today.month, today.day))
+    age = today.year - dob.year - ((dob.month, dob.day) > (today.month, today.day))
     return age
 
 def check_csrf():
