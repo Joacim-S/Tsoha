@@ -152,3 +152,8 @@ def block(uid, name):
 
         users.cancel_block(uid)
         return render_template('index.html', message='Esto peruttiin.')
+
+@app.route('/reset')
+def reset():
+    users.reset_skips()
+    return render_template('index.html', message='Ohitukset nollattiin.')

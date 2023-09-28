@@ -158,3 +158,8 @@ def cancel_block(other_id):
     sql = text('DELETE FROM blocks WHERE blocker_id=:uid AND blocked_id=:other_id')
     db.session.execute(sql, {'uid':session['user_id'], 'other_id':other_id})
     db.session.commit()
+
+def reset_skips():
+    sql = text('DELETE FROM requests WHERE sender_id=:uid AND answer IS NULL AND content=False')
+    db.session.execute(sql, {'uid':session['user_id']})
+    db.session.commit()
