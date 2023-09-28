@@ -39,11 +39,12 @@ def send_message(content, receiver_id, convo_id):
     db.session.commit()
 
 def get_convos():
-    sql = text('SELECT DISTINCT u.displayname, m.convo_id, m.content, m.sent_at \
+    sql = text('SELECT DISTINCT u.displayname, m.convo_id, \
+                (SELECT content FROM messages WHERE \
+                convo_id=m.convo_id ORDER BY sent_at DESC LIMIT 1), u.id \
                 FROM users u, messages m WHERE \
                 (u.id=m.receiver_id AND m.sender_id=:user_id) \
-                OR (u.id=m.sender_id AND m.receiver_id=:user_id)  \
-                ORDER BY m.sent_at DESC')
+                OR (u.id=m.sender_id AND m.receiver_id=:user_id)')
     result = db.session.execute(sql, {'user_id':session['user_id']}).fetchall()
     return result
 

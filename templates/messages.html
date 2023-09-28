@@ -1,6 +1,13 @@
 {% extends 'layout.html' %}
 {% block content %}
+<h2>{{ name }}</h2>
 {% for msg in msgs %}
-{{ msg }}
+<b>{{ msg[0] }}:</b> {{ msg[1] }}
+<br>
 {% endfor %}
+<form action='/messages/{{ convo_id }}/{{ name }}/{{ uid }}' method='POST'>
+    <input type='text' name='content' required></p>
+    <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
+    <input type='submit' value='Lähetä'>
+</form>
 {% endblock %}

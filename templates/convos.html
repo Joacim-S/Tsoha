@@ -4,7 +4,7 @@
 {% if convos %}
 <p>Nimi | Uusin viesti</p>
 {% for convo in convos %}
-<a href='/messages/{{ convo[1] }}'>{{ convo[0] }}</a> {{ convo[2] }}
+<a href='/messages/{{ convo[1] }}/{{ convo[0] }}/{{ convo[3] }}'>{{ convo[0] }}</a> {{ convo[2] }} <br>
 {% endfor %}
 {% else %}
 Sinulla ei vielä ole keskusteluja.

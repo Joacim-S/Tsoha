@@ -129,13 +129,14 @@ def convos():
     convos = m.get_convos()
     return render_template('convos.html', convos=convos)
 
-@app.route('/messages/<int:convo_id>', methods=['GET', 'POST'])
-def messages(convo_id):
+@app.route('/messages/<int:convo_id>/<name>/<int:uid>', methods=['GET', 'POST'])
+def messages(convo_id, name, uid):
     if request.method == 'POST':
         users.check_csrf()
+        m.send_message(request.form['content'], uid, convo_id)
 
     if not m.check_permission(convo_id):
         return render_template('index.html', access_error=True)
 
     msgs = m.get_messages(convo_id)
-    return render_template('messages.html', msgs=msgs)
+    return render_template('messages.html', msgs=msgs, convo_id=convo_id, name=name, uid=uid)
