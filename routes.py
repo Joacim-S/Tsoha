@@ -131,12 +131,30 @@ def convos():
 
 @app.route('/messages/<int:convo_id>/<name>/<int:uid>', methods=['GET', 'POST'])
 def messages(convo_id, name, uid):
+    if not m.check_permission(convo_id):
+        return render_template('index.html', message='''Palasit etusivulle, yritit 
+        avata sivun, jonka katseluun sinulla ei ole oikeutta.''')
+
     if request.method == 'POST':
         users.check_csrf()
         m.send_message(request.form['content'], uid, convo_id)
 
-    if not m.check_permission(convo_id):
-        return render_template('index.html', access_error=True)
-
     msgs = m.get_messages(convo_id)
-    return render_template('messages.html', msgs=msgs, convo_id=convo_id, name=name, uid=uid)
+    block_status = users.check_block(uid)
+    return render_template('messages.html', msgs=msgs, convo_id=convo_id, 
+                            name=name, uid=uid, block_status=block_status)
+
+@app.route('/block/<int:uid>/<name>', methods=['GET', 'POST'])
+def block(uid, name):
+    if request.method == 'GET':
+        return render_template('block.html', uid=uid, name=name)
+
+    if request.method == 'POST':
+        users.check_csrf()
+        if request.form['block'] == 'True':
+            users.block(uid)
+            return render_template('index.html', message='Käyttäjä estettiin.')
+
+        else:
+            users.cancel_block(uid)
+            return render_template('index.html', message='Esto peruttiin.')

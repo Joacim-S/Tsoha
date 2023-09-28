@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<p>Muutetaanko kkäyttäjän {{ name }} estoa?</p>
+<form action='/block/{{ uid }}/{{ name }}' method='POST'>
+    <input type='radio' name='block' value=True required> Estä
+    <input type='radio' name='block' value=False required> Peru esto
+    <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
+    <input type='submit' value='Vahvista'>
+</form>
+{% endblock %}

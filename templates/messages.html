@@ -5,9 +5,18 @@
 <b>{{ msg[0] }}:</b> {{ msg[1] }}
 <br>
 {% endfor %}
+{% if not block_status %}
 <form action='/messages/{{ convo_id }}/{{ name }}/{{ uid }}' method='POST'>
     <input type='text' name='content' required></p>
     <input type='hidden' name='csrf_token' value='{{ session.csrf_token }}'>
     <input type='submit' value='Lähetä'>
 </form>
+{% endif %}
+<form action='/block/{{ uid }}/{{ name }}' method='GET'>
+    <input type='submit' value='Estä tai poista esto'>
+</form>
+{% if block_status %}
+<p>{{  block_status }}</p>
+{% endif %}
 {% endblock %}
+

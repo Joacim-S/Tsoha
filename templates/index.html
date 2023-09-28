@@ -3,8 +3,8 @@
 
 {% if session.username %}
 <p>Hei {{ session.username }}!</p>
-{% if access_error %}
-<p>Palasit etusivulle, koska sinulla ei ollut oikeuksia katsella sivua, jonka yritit avata.</p>
+{% if message %}
+<p>{{ message }}</p>
 {% endif %}
 {% else %}
 <p>Tervetuloa!</p>

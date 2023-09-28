@@ -53,10 +53,7 @@ def check_permission(convo_id):
                 convo_id=:convo_id AND \
                 (sender_id=:user_id OR receiver_id=:user_id)')
     result = db.session.execute(sql, {'convo_id':convo_id, 'user_id':session['user_id']}).fetchone()
-    if result:
-        return True
-    else:
-        return False
+    return bool(result)
 
 def get_messages(convo_id):
     sql = text('SELECT u.displayname, m.content, m.sent_at FROM \

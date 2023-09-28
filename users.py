@@ -139,3 +139,21 @@ def block(uid):
     sql = text('INSERT INTO blocks (blocker_id, blocked_id) VALUES (:blocker, :blocked)')
     db.session.execute(sql, {'blocker':session['user_id'], 'blocked':uid})
     db.session.commit()
+
+def check_block(other_id):
+    block_status = False
+    sql = text('SELECT blocker_id FROM blocks WHERE \
+                (blocker_id=:other_id AND blocked_id=:uid) OR \
+                (blocked_id=:other_id AND blocker_id=:uid)')
+    block = db.session.execute(sql, {'other_id':other_id, 'uid':session['user_id']}).fetchone()
+    if block:
+        if block.blocker_id == other_id:
+            block_status = 'Tämä käyttäjä on estänyt sinut. Ette voi lähettää viestejä toisillenne, ennen kuin hän poistää eston.'
+        else:
+            block_status = 'Olet estänyt tämän käyttäjän. Ette voi lähettää viestejä toisillenne, ennen kuin poistat eston.'
+    return block_status
+
+def cancel_block(other_id):
+    sql = text('DELETE FROM blocks WHERE blocker_id=:uid AND blocked_id=:other_id')
+    db.session.execute(sql, {'uid':session['user_id'], 'other_id':other_id})
+    db.session.commit()
