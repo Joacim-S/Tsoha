@@ -126,8 +126,7 @@ def translate_gender(character):
         return 'Nainen'
     if character == 'm':
         return 'Mies'
-    if character == 'o':
-        return 'Muu'
+    return 'Muu'
 
 def get_likes(uid=-1):
     return likes.get_likes(uid)
@@ -145,12 +144,14 @@ def check_block(other_id):
     sql = text('SELECT blocker_id FROM blocks WHERE \
                 (blocker_id=:other_id AND blocked_id=:uid) OR \
                 (blocked_id=:other_id AND blocker_id=:uid)')
-    block = db.session.execute(sql, {'other_id':other_id, 'uid':session['user_id']}).fetchone()
-    if block:
-        if block.blocker_id == other_id:
-            block_status = 'Tämä käyttäjä on estänyt sinut. Ette voi lähettää viestejä toisillenne, ennen kuin hän poistää eston.'
+    blocker = db.session.execute(sql, {'other_id':other_id, 'uid':session['user_id']}).fetchone()
+    if blocker:
+        if blocker.blocker_id == other_id:
+            block_status = '''Tämä käyttäjä on estänyt sinut.
+                            Ette voi lähettää viestejä toisillenne, ennen kuin hän poistää eston.'''
         else:
-            block_status = 'Olet estänyt tämän käyttäjän. Ette voi lähettää viestejä toisillenne, ennen kuin poistat eston.'
+            block_status = '''Olet estänyt tämän käyttäjän.
+                            Ette voi lähettää viestejä toisillenne, ennen kuin poistat eston.'''
     return block_status
 
 def cancel_block(other_id):

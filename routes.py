@@ -45,25 +45,18 @@ def my_profile():
 
 @app.route('/my_likes', methods=['GET', 'POST'])
 def my_likes():
-
-    if request.method == 'GET':
-        likes, dislikes = users.get_likes()
-        return render_template('my_likes.html', likes = likes, dislikes = dislikes)
-
     if request.method == 'POST':
         users.check_csrf()
         item = request.form['item']
         like = request.form['like']
         users.update_like(item, like)
-        likes, dislikes = users.get_likes()
-        return render_template('my_likes.html', likes = likes, dislikes = dislikes)
+
+    likes, dislikes = users.get_likes()
+    return render_template('my_likes.html', likes = likes, dislikes = dislikes)
 
 
 @app.route('/update_info', methods=['GET', 'POST'])
 def update_info():
-    if request.method == 'GET':
-        return render_template('update_info.html')
-
     if request.method == 'POST':
         users.check_csrf()
         displayname = request.form['displayname']
@@ -82,6 +75,8 @@ def update_info():
             return render_template('update_info.html', date_error = result[0],
                                     missing_info = result[1], failed = result[2])
         return redirect('/my_profile')
+
+    return render_template('update_info.html')
 
 @app.route('/browse', methods=['GET', 'POST'])
 def browse():
@@ -126,13 +121,13 @@ def requests():
 
 @app.route('/convos', methods=['GET'])
 def convos():
-    convos = m.get_convos()
-    return render_template('convos.html', convos=convos)
+    convolist = m.get_convos()
+    return render_template('convos.html', convos=convolist)
 
 @app.route('/messages/<int:convo_id>/<name>/<int:uid>', methods=['GET', 'POST'])
 def messages(convo_id, name, uid):
     if not m.check_permission(convo_id):
-        return render_template('index.html', message='''Palasit etusivulle, yritit 
+        return render_template('index.html', message='''Palasit etusivulle, yritit
         avata sivun, jonka katseluun sinulla ei ole oikeutta.''')
 
     if request.method == 'POST':
@@ -141,7 +136,7 @@ def messages(convo_id, name, uid):
 
     msgs = m.get_messages(convo_id)
     block_status = users.check_block(uid)
-    return render_template('messages.html', msgs=msgs, convo_id=convo_id, 
+    return render_template('messages.html', msgs=msgs, convo_id=convo_id,
                             name=name, uid=uid, block_status=block_status)
 
 @app.route('/block/<int:uid>/<name>', methods=['GET', 'POST'])
@@ -155,6 +150,5 @@ def block(uid, name):
             users.block(uid)
             return render_template('index.html', message='Käyttäjä estettiin.')
 
-        else:
-            users.cancel_block(uid)
-            return render_template('index.html', message='Esto peruttiin.')
+        users.cancel_block(uid)
+        return render_template('index.html', message='Esto peruttiin.')

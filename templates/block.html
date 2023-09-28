@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
-<p>Muutetaanko kkäyttäjän {{ name }} estoa?</p>
+<p>Muutetaanko käyttäjän {{ name }} estoa?</p>
 <form action='/block/{{ uid }}/{{ name }}' method='POST'>
     <input type='radio' name='block' value=True required> Estä
     <input type='radio' name='block' value=False required> Peru esto
